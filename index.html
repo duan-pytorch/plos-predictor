@@ -198,44 +198,44 @@
         </div>
 
         <div class="content">
-            <div class="section-title">📋 患者信息录入 (Patient Information Entry) </div>
+            <div class="section-title">📋 Patient Information Entry (患者信息录入) </div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>白蛋白 (Albumin) <span class="label-sub">g/L</span></label>
+                    <label>Albumin (白蛋白) <span class="label-sub">g/L</span></label>
                     <input type="number" id="Albumin" min="20" max="50" step="0.1" value="35.9">
                 </div>
                 <div class="form-group">
-                    <label>C反应蛋白 (CRP) <span class="label-sub">mg/L</span></label>
+                    <label>CRP (C反应蛋白) <span class="label-sub">mg/L</span></label>
                     <input type="number" id="CRP" min="0" max="120" step="0.1" value="36.9">
                 </div>
                 <div class="form-group">
-                    <label>血红蛋白 (Hemoglobin) <span class="label-sub">g/L</span></label>
+                    <label>Hemoglobin (血红蛋白) <span class="label-sub">g/L</span></label>
                     <input type="number" id="Hemoglobin" min="70" max="160" step="0.1" value="120.2">
                 </div>
                 <div class="form-group">
-                    <label>术前规范抗结核治疗≥2周 (Standard preoperative anti-tuberculosis treatment ≥2 weeks) </label>
+                    <label>Standard preoperative anti-tuberculosis treatment ≥2 weeks (术前规范抗结核治疗≥2周) </label>
                     <select id="Anti_TB">
                         <option value="0" >No</option>
                         <option value="1" selected>Yes</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>椎旁脓肿 (Paravertebral Abscess)</label>
+                    <label>Paravertebral Abscess (椎旁脓肿)</label>
                     <select id="Abscess">
                         <option value="0" selected>No</option>
                         <option value="1" >Yes</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>手术时长 (Op_duration) <span class="label-sub">min</span></label>
+                    <label>Op_duration (手术时长) <span class="label-sub">min</span></label>
                     <input type="number" id="Op_duration" min="100" max="400" step="1" value="207">
                 </div>
                 <div class="form-group">
-                    <label>术中出血量 (Blood_loss) <span class="label-sub">mL</span></label>
+                    <label>Blood_loss (术中出血量) <span class="label-sub">mL</span></label>
                     <input type="number" id="Blood_loss" min="0" max="1500" step="1" value="563">
                 </div>
                 <div class="form-group">
-                    <label>前后联合入路 (Combined Approach)</label>
+                    <label>Combined Approach (前后联合入路)</label>
                     <select id="Combined">
                         <option value="0" selected>No</option>
                         <option value="1" >Yes</option>
@@ -243,10 +243,10 @@
                 </div>
             </div>
 
-            <button class="btn-calculate" onclick="calculateRisk()">🚀 计算 PLOS 预测概率 (Calculate predicted PLOS probability) </button>
+            <button class="btn-calculate" onclick="calculateRisk()">🚀 Calculate predicted PLOS probability (计算 PLOS 预测概率) </button>
 
             <div class="result-box" id="resultBox">
-                <div class="prob-label">预测术后住院时间延长概率 (Predicted probability of PLOS) </div>
+                <div class="prob-label">Predicted probability of PLOS (预测术后住院时间延长概率) </div>
                 <div class="prob-value" id="probValue">--</div>
                 <div id="riskBadge" class="risk-badge"></div>
                 <div class="risk-text" id="riskText"></div>
@@ -256,7 +256,7 @@
 
             <div class="info-section">
                 <strong>Model Performance：</strong> External validation set: AUC = 0.795, Brier score = 0.175. Based on retrospective data from 900 spinal tuberculosis surgical patients across five centers.<br>
-                <strong>Disclaimer：</strong> 本工具供临床辅助决策参考，且未过试用期，不能替代医师的专业判断。This tool is intended for clinical decision support only and remains in the trial phase; it does not substitute for professional medical judgment.
+                <strong>Disclaimer：</strong> This tool is intended for clinical decision support only and remains in the trial phase; it does not substitute for professional medical judgment. 本工具供临床辅助决策参考，且未过试用期，不能替代医师的专业判断。
             </div>
         </div>
 
@@ -322,11 +322,11 @@
             } else if (prob < 0.55) {
                 riskBadge.className = 'risk-badge risk-mid';
                 riskBadge.textContent = '中风险 (Intermediate Risk)';
-                riskText.innerHTML = '预测概率 30%–55%，PLOS风险中等。建议加强围术期管理：优化营养支持（ALB&lt;35 g/L者补充白蛋白）、控制术中出血、术后早期活动干预。';
+                riskText.innerHTML = '预测概率 30%–55%，PLOS风险中等。建议加强围术期管理：优化营养支持（ALB&lt;35 g/L者补充白蛋白）、术后早期活动干预。';
             } else {
                 riskBadge.className = 'risk-badge risk-high';
                 riskBadge.textContent = '高风险 (High Risk)';
-                riskText.innerHTML = '预测概率 &gt; 55%，PLOS风险较高。建议启动强化康复方案：术前营养干预、术中精细止血、术后多学科协作（MDT）评估，必要时延长监护。';
+                riskText.innerHTML = '预测概率 &gt; 55%，PLOS风险较高。建议启动强化康复方案：术后多学科协作（MDT）评估，必要时延长监护。';
             }
 
             // 平滑滚动到结果
