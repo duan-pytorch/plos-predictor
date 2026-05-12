@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脊柱结核术后住院时间延长（PLOS）风险预测工具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(90deg, #1a5276 0%, #2e86ab 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a5276;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8f4f8;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 6px;
+        }
+        .label-sub {
+            font-size: 11px;
+            color: #7f8c8d;
+            font-weight: 400;
+            margin-left: 4px;
+        }
+        input[type="number"], select {
+            padding: 10px 12px;
+            border: 1.5px solid #dce4ec;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: #fafbfc;
+        }
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #2e86ab;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(46,134,171,0.1);
+        }
+        .btn-calculate {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #1a5276 0%, #2e86ab 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+            margin-bottom: 25px;
+        }
+        .btn-calculate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(26,82,118,0.25);
+        }
+        .btn-calculate:active {
+            transform: translateY(0);
+        }
+        .result-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #e8f4f8;
+            display: none;
+        }
+        .result-box.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .prob-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: #1a5276;
+            margin: 10px 0;
+        }
+        .prob-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        .risk-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 12px;
+        }
+        .risk-low { background: #27ae60; }
+        .risk-mid { background: #f39c12; }
+        .risk-high { background: #e74c3c; }
+        .risk-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .divider {
+            height: 1px;
+            background: #e8f4f8;
+            margin: 20px 0;
+        }
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 18px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .info-section strong {
+            color: #1a5276;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 11px;
+            color: #95a5a6;
+            background: #f8f9fa;
+        }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 18px; }
+            .content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>脊柱结核术后住院时间延长（PLOS）风险预测工具</h1>
+            <p>基于术前-术中两阶段Logistic回归模型 | 五中心推导与外部验证</p>
+        </div>
+
+        <div class="content">
+            <div class="section-title">📋 患者信息录入</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>白蛋白 (Albumin) <span class="label-sub">g/L</span></label>
+                    <input type="number" id="Albumin" min="20" max="50" step="0.1" value="35.9">
+                </div>
+                <div class="form-group">
+                    <label>C反应蛋白 (CRP) <span class="label-sub">mg/L</span></label>
+                    <input type="number" id="CRP" min="0" max="120" step="0.1" value="36.9">
+                </div>
+                <div class="form-group">
+                    <label>血红蛋白 (Hemoglobin) <span class="label-sub">g/L</span></label>
+                    <input type="number" id="Hemoglobin" min="70" max="160" step="0.1" value="120.2">
+                </div>
+                <div class="form-group">
+                    <label>术前规范抗结核治疗 ≥2周</label>
+                    <select id="Anti_TB">
+                        <option value="0" >No</option>
+                        <option value="1" selected>Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>椎旁脓肿 (Paravertebral Abscess)</label>
+                    <select id="Abscess">
+                        <option value="0" selected>No</option>
+                        <option value="1" >Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>手术时长 (Op_duration) <span class="label-sub">min</span></label>
+                    <input type="number" id="Op_duration" min="100" max="400" step="1" value="207">
+                </div>
+                <div class="form-group">
+                    <label>术中出血量 (Blood_loss) <span class="label-sub">mL</span></label>
+                    <input type="number" id="Blood_loss" min="0" max="1500" step="1" value="563">
+                </div>
+                <div class="form-group">
+                    <label>前后联合入路 (Combined Approach)</label>
+                    <select id="Combined">
+                        <option value="0" selected>No</option>
+                        <option value="1" >Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-calculate" onclick="calculateRisk()">🚀 计算 PLOS 预测概率</button>
+
+            <div class="result-box" id="resultBox">
+                <div class="prob-label">预测术后住院时间延长（PLOS）概率</div>
+                <div class="prob-value" id="probValue">--</div>
+                <div id="riskBadge" class="risk-badge"></div>
+                <div class="risk-text" id="riskText"></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-section">
+                <strong>模型性能：</strong> 外部验证集 AUC = 0.795，Brier = 0.175。基于五中心900例脊柱结核手术患者（宁夏医科大学总医院、河南省人民医院、河南省传染病医院、银川市第三人民医院、平罗县人民医院）。<br>
+                <strong>使用说明：</strong> 本工具基于Phase II Logistic回归Nomogram构建，输入上述8项核心变量即可实时计算个体化PLOS风险概率。以0.550为最优截断值：概率&lt;0.30为低危，0.30–0.55为中危，&gt;0.55为高危。<br>
+                <strong>风险提示：</strong> 本工具仅供临床辅助决策参考，不能替代医师的专业判断。最终诊疗方案需结合患者具体病情综合制定。
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2026 Spinal Tuberculosis Research Group | 基于术前-术中两阶段可解释机器学习研究
+        </div>
+    </div>
+
+    <script>
+        // Logistic回归系数（与Python模型完全一致）
+        const INTERCEPT = 3.1203969066;
+        const COEFS = {
+            'Albumin':     -0.1956101162,
+            'CRP':          0.0292200491,
+            'Hemoglobin':   -0.0393732313,
+            'Anti_TB':      -1.0553555391,
+            'Abscess':      2.0056618594,
+            'Op_duration':  0.0180302129,
+            'Blood_loss':   0.0020783012,
+            'Combined':     1.0531935751
+        };
+
+        function calculateRisk() {
+            // 读取输入
+            const albumin    = parseFloat(document.getElementById('Albumin').value) || 0;
+            const crp         = parseFloat(document.getElementById('CRP').value) || 0;
+            const hemoglobin  = parseFloat(document.getElementById('Hemoglobin').value) || 0;
+            const antiTB      = parseInt(document.getElementById('Anti_TB').value) || 0;
+            const abscess     = parseInt(document.getElementById('Abscess').value) || 0;
+            const opDuration  = parseFloat(document.getElementById('Op_duration').value) || 0;
+            const bloodLoss   = parseFloat(document.getElementById('Blood_loss').value) || 0;
+            const combined    = parseInt(document.getElementById('Combined').value) || 0;
+
+            // 计算 logit
+            let logit = INTERCEPT;
+            logit += COEFS['Albumin'] * albumin;
+            logit += COEFS['CRP'] * crp;
+            logit += COEFS['Hemoglobin'] * hemoglobin;
+            logit += COEFS['Anti_TB'] * antiTB;
+            logit += COEFS['Abscess'] * abscess;
+            logit += COEFS['Op_duration'] * opDuration;
+            logit += COEFS['Blood_loss'] * bloodLoss;
+            logit += COEFS['Combined'] * combined;
+
+            // 计算概率
+            const prob = 1 / (1 + Math.exp(-logit));
+            const probPercent = (prob * 100).toFixed(1);
+
+            // 显示结果
+            const resultBox = document.getElementById('resultBox');
+            const probValue = document.getElementById('probValue');
+            const riskBadge = document.getElementById('riskBadge');
+            const riskText  = document.getElementById('riskText');
+
+            probValue.textContent = probPercent + '%';
+            resultBox.classList.add('active');
+
+            // 风险分级
+            if (prob < 0.30) {
+                riskBadge.className = 'risk-badge risk-low';
+                riskBadge.textContent = '低风险 (Low Risk)';
+                riskText.innerHTML = '预测概率 &lt; 30%，PLOS风险较低。建议按常规ERAS路径管理，标准围术期护理即可。';
+            } else if (prob < 0.55) {
+                riskBadge.className = 'risk-badge risk-mid';
+                riskBadge.textContent = '中风险 (Intermediate Risk)';
+                riskText.innerHTML = '预测概率 30%–55%，PLOS风险中等。建议加强围术期管理：优化营养支持（ALB&lt;35 g/L者补充白蛋白）、控制术中出血、术后早期活动干预。';
+            } else {
+                riskBadge.className = 'risk-badge risk-high';
+                riskBadge.textContent = '高风险 (High Risk)';
+                riskText.innerHTML = '预测概率 &gt; 55%，PLOS风险较高。建议启动强化康复方案：术前营养干预、术中精细止血、术后多学科协作（MDT）评估，必要时延长监护。';
+            }
+
+            // 平滑滚动到结果
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+</html>
