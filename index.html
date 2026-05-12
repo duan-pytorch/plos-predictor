@@ -194,11 +194,11 @@
         <div class="header">
             <h1>PLOS Risk Prediction Tool for Postoperative Spinal Tuberculosis
                 脊柱结核术后住院时间延长（PLOS）风险预测工具</h1>
-            <p>基于术前-术中两阶段Logistic回归模型 | 五中心推导与外部验证</p>
+            <p>Based on a preoperative-intraoperative two-stage logistic regression model | Five-center derivation and external validation</p>
         </div>
 
         <div class="content">
-            <div class="section-title">📋 患者信息录入</div>
+            <div class="section-title">📋 患者信息录入 (Patient Information Entry) </div>
             <div class="form-grid">
                 <div class="form-group">
                     <label>白蛋白 (Albumin) <span class="label-sub">g/L</span></label>
@@ -213,7 +213,7 @@
                     <input type="number" id="Hemoglobin" min="70" max="160" step="0.1" value="120.2">
                 </div>
                 <div class="form-group">
-                    <label>术前规范抗结核治疗 ≥2周</label>
+                    <label>术前规范抗结核治疗≥2周 (Standard preoperative anti-tuberculosis treatment ≥2 weeks) </label>
                     <select id="Anti_TB">
                         <option value="0" >No</option>
                         <option value="1" selected>Yes</option>
@@ -243,10 +243,10 @@
                 </div>
             </div>
 
-            <button class="btn-calculate" onclick="calculateRisk()">🚀 计算 PLOS 预测概率</button>
+            <button class="btn-calculate" onclick="calculateRisk()">🚀 计算 PLOS 预测概率 (Calculate predicted PLOS probability) </button>
 
             <div class="result-box" id="resultBox">
-                <div class="prob-label">预测术后住院时间延长（PLOS）概率</div>
+                <div class="prob-label">预测术后住院时间延长概率 (Predicted probability of PLOS) </div>
                 <div class="prob-value" id="probValue">--</div>
                 <div id="riskBadge" class="risk-badge"></div>
                 <div class="risk-text" id="riskText"></div>
@@ -255,14 +255,13 @@
             <div class="divider"></div>
 
             <div class="info-section">
-                <strong>模型性能：</strong> 外部验证集 AUC = 0.795，Brier = 0.175。基于五中心900例脊柱结核手术患者回顾性数据。<br>
-                <strong>使用说明：</strong> 本工具基于Logistic回归算法构建。<br>
-                <strong>风险提示：</strong> 本工具供临床辅助决策参考，且未过试用期，不能替代医师的专业判断。
+                <strong>Model Performance：</strong> External validation set: AUC = 0.795, Brier score = 0.175. Based on retrospective data from 900 spinal tuberculosis surgical patients across five centers.<br>
+                <strong>Disclaimer：</strong> 本工具供临床辅助决策参考，且未过试用期，不能替代医师的专业判断。This tool is intended for clinical decision support only and remains in the trial phase; it does not substitute for professional medical judgment.
             </div>
         </div>
 
         <div class="footer">
-            © 2026 Spinal Tuberculosis Research Group | 基于术前-术中两阶段可解释机器学习研究
+            © 2026 Spinal Tuberculosis Research Group | Based on a preoperative-intraoperative two-stage explainable machine learning study
         </div>
     </div>
 
